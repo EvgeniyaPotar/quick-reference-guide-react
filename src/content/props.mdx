@@ -1,0 +1,79 @@
+import Box from "../components/Box.jsx"
+import { CodeBlock } from "../components/CodeBlock";
+
+# Props
+**Props** — это объект, содержащий данные, которые передаются в компонент из его родителя. Props похожи на параметры функций: они предоставляют компонентам необходимую информацию для корректной работы.
+<CodeBlock code={`function Greeting(props)
+    return <h1>Hello, {props.name}!</h1>;
+}
+<Greeting name={"Pavel"} />;`} language="javascript" />
+
+### Чтение Props в дочернем компоненте
+
+Props передаются в компоненты так же, как атрибуты в HTML-элементы.
+
+<CodeBlock code={`function Welcome(props) {
+    return <h1>Welcome, {props.userName}!</h1>;
+}`} language="javascript" />
+
+Рекомендуется использовать деструктуризацию для более читаемого кода:
+
+<CodeBlock code={`function Profile({ name, age }) {
+    return (
+      <div>
+        <p>Name: {name}</p>
+        <p>Age: {age}</p>
+      </div>
+    );
+}
+<Profile name={"Pavel"} age={27} />;`} language="javascript" />
+
+### Типы данных, передаваемые через Props
+
+
+Props поддерживают сложные типы данных, таких как массивы и объекты:
+
+<CodeBlock code={`function TodoList(props) {
+    return (
+      <ul>
+        {props.todos.map((todo, index) => (
+          <li key={index}>{todo}</li>
+        ))}
+      </ul>
+    );
+}
+
+<TodoList todos={["Learn React", "Build a project", "Get a job"]} />;`} language="javascript" />
+
+Props могут быть функциями для управления поведением компонента:
+
+<CodeBlock code={`function Button(props) {
+    return <button onClick={props.onClick}>Click Me</button>;
+}
+
+<Button onClick={() => console.log("Button clicked!")} />;`} language="javascript" />
+
+### Использование `props.children` в компонентах
+
+`props.children` — это специальное свойство, которое автоматически передаётся в компонент, если внутри него вложены другие компоненты или элементы. Это позволяет создавать гибкие и универсальные компоненты.
+
+<CodeBlock code={`function Container({ children }) {
+    return <div className="container">{children}</div>;
+}
+
+function App() {
+    return (
+      <Container>
+        <h1>Welcome!</h1>
+        <p>This is a reusable container component.</p>
+      </Container>
+    );
+}`} language="javascript" />
+
+<Box type="warning" title="Важно!">
+- Пропсы являются неизменяемыми (immutable), их нельзя изменять напрямую.
+</Box>
+
+<Box type="info" title="Официальная документация:">
+https://react.dev/learn/passing-props-to-a-component
+</Box>

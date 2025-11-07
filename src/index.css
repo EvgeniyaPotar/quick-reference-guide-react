@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+}
+
+.navigation[data-theme=light]>a.active {
+    @apply bg-[#a8adad];
+}
+
+.navigation[data-theme=dark]>a.active {
+    @apply bg-[#595757];
+}
+
+@layer components {
+    /* MDX контент */
+    .mdx-content h1 {
+        @apply text-3xl font-bold mb-6 text-center p-5 ;
+    }
+
+    .mdx-content h2 {
+        @apply text-2xl font-bold mt-8 mb-4 text-center ;
+    }
+
+    .mdx-content h3 {
+        @apply text-lg font-bold text-center mt-6 mb-3;
+    }
+    .mdx-content h4 {
+        @apply text-base font-bold indent-5 mt-6 mb-3;
+    }
+
+    .mdx-content p {
+        @apply mb-4 indent-5 leading-relaxed text-justify;
+    }
+
+    .mdx-content .box p {
+        @apply indent-0;
+    }
+
+    .mdx-content ul {
+        @apply  list-disc ml-10 mb-5 space-y-2;
+    }
+
+    .mdx-content ol {
+        @apply list-decimal ml-10 mb-5  space-y-2;
+    }
+    .mdx-content .box ul, .mdx-content .box ol {
+        @apply  ml-5;
+    }
+
+    .mdx-content li {
+        @apply mb-5;
+    }
+
+
+    .mdx-content pre {
+        @apply p-5 mt-5 mb-5 bg-[#f1f2f2] dark:bg-[#474646] rounded-[10px] shadow-md overflow-x-auto;
+    }
+
+    .mdx-content code {
+        @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded;
+    }
+
+    .mdx-content pre code {
+        @apply bg-transparent p-0;
+    }
+
+    .mdx-content a {
+        @apply text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300;
+    }
+
+    .mdx-content blockquote {
+        @apply border-l-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 p-4 my-4 italic;
+    }
+
+    .mdx-content img {
+        @apply text-amber-200 text-lg ;
+    }
+}
+
+
+
+
+
+

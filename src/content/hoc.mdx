@@ -1,0 +1,87 @@
+import { CodeBlock } from "../components/CodeBlock";
+import Box from "../components/Box.jsx"
+
+# HOС (Higher-Order Components)
+
+HOC (Higher-Order Component) — это функции высшего порядка, которые принимают компонент и возвращают новый компонент с расширенным функционалом.
+
+Они помогают избежать дублирования кода, управлять состоянием, обеспечивают абстракцию поведения и позволяют добавлять функциональность к компонентам без изменения их кода.
+
+#### Примеры использования HOC
+
+Пример 1: Защита маршрута (Route Guard)
+
+<CodeBlock code={`import React from 'react';
+
+  // HOC для проверки авторизации
+function withAuth(WrappedComponent) {
+    return (props) => {
+      const isAuthenticated = true; // Проверка авторизации (пример)
+      if (!isAuthenticated) {
+        return <p>Доступ запрещён</p>;
+      }
+      return <WrappedComponent {...props} />;
+    };
+}
+
+function Dashboard() {
+    return <h1>Личный кабинет</h1>;
+}
+
+const ProtectedDashboard = withAuth(Dashboard);
+
+export default ProtectedDashboard;`} language="javascript" />
+
+#### Пример 2: Обработка данных
+
+HOC для передачи данных в компонент из API:
+
+<CodeBlock code={`import React, { useEffect, useState } from 'react';
+
+// HOC для добавления данных из API
+function withData(WrappedComponent, fetchData) {
+    return (props) => {
+      const [data, setData] = useState(null);
+
+      useEffect(() => {
+        fetchData().then((result) => setData(result));
+      }, []);
+
+      return <WrappedComponent {...props} data={data} />;
+    };
+}
+
+// Компонент, который будет использовать данные
+function UserList({ data }) {
+    if (!data) return <p>Загрузка...</p>;
+    return (
+      <ul>
+        {data.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    );
+}
+
+// Использование HOC
+const fetchUsers = () =>
+    Promise.resolve([{ id: 1, name: 'Анна' }, { id: 2, name: 'Иван' }]);
+const UserListWithData = withData(UserList, fetchUsers);
+
+export default UserListWithData;`} language="javascript" />
+
+### Недостатки HOC
+
+1. **Повышение сложности:** Если HOC вложены друг в друга, это может привести к так называемому «адскому дереву компонентов».
+
+2. **Проблемы с производительностью:** Каждый HOC оборачивает компонент, что увеличивает глубину дерева компонентов.
+
+3. **Проблемы с именованием:** HOC возвращает новый компонент, что может запутать отладку и отображение имени компонента в инструментах разработки.
+
+<Box type="warning" title="Важно!">
+HOC — это хороший инструмент для повышения переиспользуемости кода и добавления логики к компонентам. Но из-за их сложности и альтернатив, таких как хуки, HOC лучше использовать только тогда, когда это действительно необходимо.
+</Box>
+
+<Box type="info" title="Официальная документация:">
+https://legacy.reactjs.org/docs/higher-order-components.html
+</Box>

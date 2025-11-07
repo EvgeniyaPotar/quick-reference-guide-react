@@ -1,0 +1,87 @@
+import { CodeBlock } from "../components/CodeBlock";
+import Box from "../components/Box.jsx"
+
+# useCallback
+
+В React каждая функция внутри компонента создаётся заново при каждом рендере.
+
+Это может вызывать:
+
+- Лишние ререндеры дочерних компонентов, если передавать функцию в props.
+- Пересоздание обработчиков событий, даже если они не изменились.
+
+`useCallback` решает эти проблемы, мемоизируя функцию – т.е. возвращая её же саму между рендерами, если зависимости не изменились.
+
+**Что принимает и что возвращает?**
+
+<CodeBlock code={`const memoizedCallback = useCallback(callbackFunction,[dependencies]);`} language="javascript" />
+
+Принимает:
+
+1. Функцию (`callbackFunction`) – ту, которую нужно мемоизировать.
+2. Массив зависимостей (`[dependencies]`) – если зависимости не изменились, функция остаётся той же.
+
+Возвращает:
+
+- **Ту же самую функцию** между рендерами (если зависимости не изменились).
+
+#### Пример 1: useCallback + React.memo (избегаем лишних ререндеров)
+
+<CodeBlock code={`const Child = React.memo(({ onClick }) => {
+    console.log('Ререндер Child');
+    return <button onClick={onClick}>Нажми</button>;
+  });
+
+  function App() {
+    const [count, setCount] = useState(0);
+
+    const handleClick = useCallback(() => {
+      console.log('Клик!');
+    }, []);
+
+    return (
+      <div>
+        <Child onClick={handleClick} />
+        <button onClick={() => setCount(count => count + 1)}>Обновить {count}</button>
+      </div>
+    );
+}`} language="javascript" />
+
+handleClick не пересоздаётся при каждом рендере, и Child  не перерисовывается!
+
+#### Пример 2: useCallback в обработчике событий внутри списка объектов
+
+<CodeBlock code={`function App() {
+    const [users, setUsers] = useState([
+      { id: 1, name: "Анна" },
+      { id: 2, name: "Иван" },
+      { id: 3, name: "Мария" }
+    ]);
+
+    const handleDelete = useCallback((id) => {
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+    }, []);
+
+    return (
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            {user.name}
+            <button onClick={() => handleDelete(user.id)}>Удалить</button>
+          </li>
+        ))}
+      </ul>
+    );
+}`} language="javascript" />
+
+handleDelete не пересоздаётся на каждом рендере, а передаваемая в onClick функция остаётся стабильной, что уменьшает ненужные ререндеры.
+
+<Box type="warning" title="Важно!">
+1. `useCallback` нужен, когда **функция не должна пересоздаваться** без изменения зависимостей.
+2. Помогает **избежать лишних ререндеров** в `React.memo`.
+</Box>
+
+<Box type="info" title="Официальная документация:">
+https://react.dev/reference/react/useCallback
+</Box>
+

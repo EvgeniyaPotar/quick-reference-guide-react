@@ -1,0 +1,115 @@
+import { CodeBlock } from "../components/CodeBlock";
+import Box from "../components/Box.jsx"
+
+# State
+
+State (состояние) в React — это место, где компонент хранит свои динамические данные. Это как записная книжка, которую компонент использует для хранения текущего состояния и его изменения.
+
+#### Чем отличается state от props:
+
+- **Props** передаются компоненту "снаружи", от родителя и **неизменные**.
+- **State** управляется "внутри" компонента и **изменяется**.
+
+Пример аналогии: Props — это текст в книге, который ты читаешь, а state — это твои личные заметки на полях.
+
+### Создание и использование state
+
+#### Hook `useState`
+
+В функциональных компонентах для работы с state используется хук `useState`.
+
+Он возвращает **массив** из двух элементов:
+
+- **`state`**: **текущее** **значение состояния**
+- **`setState`**: **функцию для его обновления**.
+
+а принимает **`initialState`**: начальное значение состояния. Может быть примитивным типом данных, объектом или функцией.
+
+<CodeBlock code={`import React, { useState } from 'react';
+
+const [state, setState] = useState(initialState);`} language="javascript" />
+
+<CodeBlock code={`import React, { useState } from "react";
+
+function Counter() {
+const [count, setCount] = useState(0);
+
+    return (
+      <div>
+        <p>Current count: {count}</p>
+        <button onClick={() => setCount((prevCount) => prevCount + 1)}>Increase</button>
+      </div>
+    );
+}`} language="javascript" />
+
+### Изменение state
+
+State должен быть неизменяемым напрямую. Используй setState, чтобы сообщить React об изменении:
+<CodeBlock code={`setCount((prevCount) => prevCount + 1);`} language="javascript" />
+
+#### setState — асинхронный
+
+Обновление state происходит асинхронно. Если нужно обновить состояние на основе его текущего значения, используй функцию:
+<CodeBlock code={`setCount((prevCount) => prevCount + 1);`} language="javascript" />
+
+Функция-setter (например setState) - асинхронная операция! Когда мы вызываем setState, React не обновляет состояние и не рендерит компонент немедленно. Вместо этого он помещает обновление в очередь. После этого React применяет все обновления состояния за один раз перед следующим рендером компонента.
+
+Рассмотрим пример, где мы попытаемся обновить состояние несколько раз подряд и посмотрим, как React объединяет эти обновления:
+
+<CodeBlock code={`import React, { useState, useEffect } from 'react';
+
+  const Counter = () => {
+    const [count, setCount] = useState(0);
+
+    const handleIncrement = () => {
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+    };
+
+    return (
+      <div>
+        <p>Count: {count}</p>
+        <button onClick={handleIncrement}>Increment</button>
+      </div>
+    );
+};
+
+ export default Counter;`} language="javascript" />
+
+### Работа с объектами и массивами в state
+
+Если state содержит объект, обновляй его с помощью оператора spread (...):
+
+<CodeBlock code={`const [user, setUser] = useState({ name: 'Pavel', age: 27 });
+
+  setUser((prevUser) => ({
+    ...prevUser,
+    age: 28,
+}));`} language="javascript" />
+
+Для обновления массивов тоже используй методы, создающие новый массив:
+
+<CodeBlock code={`const [items, setItems] = useState([1, 2, 3]);
+
+setItems((prevItems) => [...prevItems, 4]); // Добавление элемента
+setItems((prevItems) => prevItems.filter((item) => item !== 2)); // Удаление элемента`} language="javascript" />
+
+### Состояние и перерисовка
+
+Когда state обновляется, React автоматически перерисовывает компонент. Это делает работу с интерфейсом более удобной, но может привести к лишним обновлениям, если state изменяется слишком часто.
+
+#### Оптимизация обновлений
+
+1. Храни минимально необходимое состояние.
+2. Используй мемоизацию (`React.memo`, `useMemo`, `useCallback`) для оптимизации.
+
+<Box type="warning" title="Важно!">
+Асинхронное поведение сеттеров в React позволяет:
+ - Объединять несколько обновлений состояния в одно, что уменьшает количество рендеров и улучшает производительность.
+ - !!!Гарантировать!!!, что компоненты рендерятся с наиболее актуальным состоянием.
+</Box>
+
+<Box type="info" title="Официальная документация:">
+ https://react.dev/learn/managing-state
+</Box>

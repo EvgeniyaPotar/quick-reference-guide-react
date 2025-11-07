@@ -1,0 +1,107 @@
+import { CodeBlock } from "../components/CodeBlock";
+import Box from "../components/Box.jsx"
+
+# Context
+
+Context предоставляет способ передачи данных через дерево компонентов без явной передачи пропсов от родительских компонентов к дочерним. Это особенно полезно, когда необходимо передать данные глубоко в иерархии компонентов, избегая "просачивания" пропсов через несколько промежуточных компонентов.
+
+Для работы с Context в React необходимо выполнить следующие шаги:
+
+**Шаг 1: Создание контекста**
+
+Сначала мы должны создать контекст с помощью функции **`createContext()`** из модуля **`react`**. Пример:
+
+<CodeBlock code={`// MyContext.js
+import React from 'react';
+
+const MyContext = React.createContext();
+
+export default MyContext;`} language="javascript" />
+
+В этом примере создается новый контекст с помощью **`createContext()`** и экспортируется для дальнейшнего использования.
+
+**Шаг 2: Предоставление значения контекста**
+
+Затем  нужно предоставить значение контекста внутри компонента-провайдера. Компонент-провайдер **обертывает** дерево компонентов, **которым нужен доступ к контексту**. Пример:
+
+<CodeBlock code={`// App.js
+import React from 'react';
+import MyContext from './MyContext';
+import ComponentA from './ComponentA';
+
+const App = () => {
+    const value = 'Hello, Context!';
+
+    return (
+      <MyContext.Provider value={value}>
+        <ComponentA />
+      </MyContext.Provider>
+    );
+}
+
+export default App;`} language="javascript" />
+
+В этом примере используется **`MyContext.Provider`** для предоставления значения контекста. Значение **`value`** **будет доступно всем дочерним компонентам**, которые подписаны на этот контекст.
+
+**Шаг 3: Использование хука useContext**
+
+Теперь можно использовать хук **`useContext`** внутри функционального компонента, **чтобы получить доступ к значению контекста**. Пример:
+
+<CodeBlock code={`// ComponentA.js
+import React, { useContext } from 'react';
+import MyContext from './MyContext';
+import ComponentB from './ComponentB';
+
+function ComponentA() {
+    const value = useContext(MyContext);
+
+    return (
+      <div>
+        <h2>Component A</h2>
+        <p>Received value from Context: {value}</p>
+        <ComponentB />
+      </div>
+    );
+    }
+
+export default ComponentA;`} language="javascript" />
+
+**Шаг 4: Подписка на контекст (еще один вариант)**
+
+Есть еще один вариант подписаться на контекст в компонентах, где нужны переданные значения. Для этого используется **`MyContext.Consumer`**. Пример:
+
+<CodeBlock code={`// ComponentA.js
+import React from 'react';
+import MyContext from './MyContext';
+import ComponentB from './ComponentB';
+
+function ComponentA() {
+    return (
+      <div>
+        <h2>Component A</h2>
+        <MyContext.Consumer>
+          {(value) => (
+            <p>Received value from Context: {value}</p>
+          )}
+        </MyContext.Consumer>
+        <ComponentB />
+      </div>
+    );
+}
+
+export default ComponentA;`} language="javascript" />
+
+В этом примере используется MyContext.Consumer для получения значения контекста и отображения его внутри компонента. Значение контекста будет доступно внутри функции-рендерера в виде аргумента.
+
+<Box type="warning" title="Важно!">
+Злоупотребление контекстом может привести к ряду проблем:
+1. Проблемы с производительностью.
+2. Сложность отладки и тестирования.
+3. Нарушение инкапсуляции.
+4. Затруднения с рефакторингом.
+</Box>
+
+<Box type="info" title="Официальная документация:">
+https://react.dev/learn/scaling-up-with-reducer-and-context
+</Box>
+

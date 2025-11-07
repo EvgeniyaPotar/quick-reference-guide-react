@@ -1,0 +1,85 @@
+import { CodeBlock } from "../components/CodeBlock";
+import Box from "../components/Box.jsx"
+
+# Events
+В React события (events) являются важной частью взаимодействия с пользователем. Они позволяют обрабатывать действия пользователя, такие как клики, наведение, отправка формы и другие.
+
+Вот **пять наиболее часто используемых событий** в React и примеры их применения:
+
+1. **onClick (Клик)**:
+Событие **`onClick`** возникает при клике на элементе.
+
+<CodeBlock code={`const handleClick = () => {
+    console.log('Кликнули!');
+}
+
+const MyComponent = () => {
+    return (
+      <button onClick={handleClick}>Нажми меня</button>
+)}`} language="javascript" />
+
+2. **onChange (Изменение)**:
+Событие **`onChange`** возникает при изменении значения элемента формы, такого как текстовое поле (input), флажок (checkbox) или выбор элемента списка (radio).
+
+<CodeBlock code={`const handleChange = (event) => {
+    console.log('Изменилось значение:', event.target.value);
+  }
+
+  const MyComponent = () => {
+    return (
+      <input type="text" onChange={handleChange} />
+      или
+      <input type="text" onChange={event => handleChange(event)} />
+    );
+}`} language="javascript" />
+
+3. **onSubmit (Отправка формы)**:
+Событие **`onSubmit`** возникает при отправке формы.
+
+<CodeBlock code={`const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Форма отправлена!');
+  }
+
+  const MyComponent = () => {
+    return (
+      <form onSubmit={handleSubmit}>
+        {/* поля формы */}
+        <button type="submit">Отправить</button>
+      </form>
+ );`} language="javascript" />
+
+4. **onMouseOver (Наведение курсора)**:
+Событие **`onMouseOver`** возникает, когда курсор наводится на элемент. Оно может использоваться для отображения дополнительной информации или изменения состояния компонента при наведении.
+
+<CodeBlock code={`const handleMouseOver = () => {
+    console.log('Курсор наведен!');
+  }
+
+  const MyComponent = () => {
+    return (
+      <div onMouseOver={handleMouseOver}>Наведите курсор на меня</div>
+    );
+}`} language="javascript" />
+
+5. **onKeyDown (Нажатие клавиши)**:
+Событие **`onKeyDown`** возникает при нажатии клавиши на клавиатуре. Оно позволяет реагировать на определенные комбинации клавиш или выполнять действия на основе нажатых клавиш.
+
+<CodeBlock code={`const handleKeyDown = (event) => {
+                    console.log('Нажата клавиша:', event.key);
+  }
+
+  const MyComponent = () => {
+    return (
+      <input type="text" onKeyDown={handleKeyDown} />
+    );
+}`} language="javascript" />
+
+Существует множество других событий, таких как onFocus, onBlur, onScroll и т. д., которые могут быть использованы в зависимости от конкретных потребностей твоего приложения.
+
+<Box type="warning" title="Важно!">
+В React параметр event в callback-функции представляет объект события, который генерируется при каждом событии.
+event.target.value содержит текущее значение input элемента.
+</Box>
+
+

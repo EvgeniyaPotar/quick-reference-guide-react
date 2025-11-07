@@ -1,0 +1,196 @@
+import { CodeBlock } from "../components/CodeBlock";
+import Box from "../components/Box.jsx"
+
+# Роутинг в React
+
+Роутинг обеспечивает плавную навигацию между разделами приложения, не перезагружая страницу. Он позволяет обновлять только необходимые компоненты или данные, улучшая пользовательский опыт. Благодаря роутингу, приложение может динамически адаптироваться к параметрам маршрута, например, отображая данные определённого пользователя по его ID.
+React Router упрощает определение маршрутов и вводит новые возможности для вложенных маршрутов и переходов.
+
+Вот **ОСНОВНЫЕ КОМПОНЕНТЫ**, которые присутствуют в react-router:
+
+1. **BrowserRouter**:
+
+Это компонент, который оборачивает ваше приложение и предоставляет контекст для маршрутизации. Он используется для настройки основного маршрутизатора в приложении.
+
+<CodeBlock code={`import { BrowserRouter } from 'react-router-dom';
+
+function App() {
+    return (
+      <BrowserRouter>
+        <YourRoutes />
+      </BrowserRouter>
+    );
+}`} language="javascript" />
+
+2. **Routes**:
+
+**`Routes`** - это компонент-контейнер, в котором определяют все маршруты в приложении. Мы используем Routes для группировки нескольких Route компонентов. Вот пример:
+
+<CodeBlock code={`import { Routes, Route } from 'react-router';
+
+ // ...
+
+<Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/contact" element={<Contact />} />
+</Routes>`} language="javascript" />
+
+3. **Route**:
+
+**`Route`** - это компонент, который определяет отдельный маршрут внутри Routes. Каждый Route имеет свой путь (path) и элемент (element), который будет отображаться, когда маршрут совпадает. Вот пример:
+
+<CodeBlock code={`import { Routes, Route } from 'react-router';
+
+// ...
+
+<Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/about" element={<About />} />
+    <Route path="/contact" element={<Contact />} />
+</Routes>`} language="javascript" />
+
+4. **Link**:
+
+**`Link`** используется для создания ссылок для навигации между маршрутами в приложении.
+
+<CodeBlock code={`import { Link } from 'react-router';
+
+// ..
+
+<Link to="/">Главная</Link>
+<Link to="/about">О нас</Link>
+<Link to="/contact">Контакты</Link>`} language="javascript" />
+
+5. **NavLink**:
+
+**`NavLink`** позволяет создавать активные ссылки по текущему активному маршруту.
+
+<CodeBlock code={`import { NavLink } from 'react-router';
+
+// ...
+
+<NavLink
+    to="/faq"
+    className={isActive =>
+      "nav-link" + (!isActive ? " unselected" : "")
+    }
+>
+    FAQs
+</NavLink>
+
+<NavLink
+to="/messages"
+className={({ isActive }) =>
+isActive ? "text-red-500" : "text-black"
+   }
+>
+Messages
+</NavLink>`} language="javascript" />
+
+6. **useNavigate**:
+
+**`useNavigate`** - это хук, который позволяет перенаправлять пользователя на другие маршруты в React Router.
+
+<CodeBlock code={`import { useNavigate } from 'react-router';
+
+// ...
+
+const Home = () => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+      navigate('/about');
+    };
+
+    return (
+      <div>
+        <h1>Домашняя страница</h1>
+        <button onClick={handleClick}>Перейти к странице О нас</button>
+      </div>
+    );
+};`} language="javascript" />
+
+7. **useParams**:
+
+**`useParams`** - это хук, который позволяет получать параметры из маршрута в React Router.
+
+<CodeBlock code={`import { useParams } from 'react-router';
+
+// ...
+
+const UserProfile = () => {
+    const params = useParams();
+
+    return (
+      <div>
+        <h1>Профиль пользователя: {params.username}</h1>
+      </div>
+    );
+};`} language="javascript" />
+
+8. **useLocation**:
+
+**`useLocation`** - это хук, который позволяет получать информацию о текущем URL и его параметрах в React Router.
+
+<CodeBlock code={`import { useLocation } from 'react-router';
+
+// ...
+
+const Page = () => {
+    const location = useLocation();
+
+    return (
+      <div>
+        <h1>Текущий URL: {location.pathname}</h1>
+      </div>
+    );
+};`} language="javascript" />
+
+9. **Outlet** - играет ключевую роль в отображении компонентов, соответствующих текущему маршруту.Когда ты используешь **`Outlet`**, он служит контейнером для отображения компонентов, которые соответствуют маршрутам в твоем приложении. Вот пример:
+
+<CodeBlock code={`import { Outlet } from 'react-router';
+
+// ...
+
+const App = () => {
+    return (
+      <div>
+        <h1>Мое приложение</h1>
+        <nav>
+          {/* Навигационные ссылки */}
+        </nav>
+        <div>
+          <Outlet />
+        </div>
+      </div>
+    );
+};`} language="javascript" />
+
+10. **PrivateRoute**
+
+может потребоваться ограничить доступ к определенным маршрутам и дать доступ к ним только для аутентифицированных пользователей. Для этого можно создать компонент PrivateRoute, который будет проверять статус аутентификации пользователя и редиректить его в случае необходимости.
+
+<CodeBlock code={`import { Route, Navigate } from 'react-router';
+
+const PrivateRoute = ({ ...props }) => {
+    const isAuth = // Логика проверки аутентификации пользователя
+    return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
+};`} language="javascript" />
+
+
+<Box type="warning" title="Важно!">
+- Роутинг является важной частью веб-приложений, которая позволяет управлять навигацией и отображением различных компонентов на основе URL.
+- Библиотека react-router-dom предоставляет инструменты для реализации роутинга в приложениях на React.
+- Основные компоненты react-router-dom v6 включают **`BrowserRouter`**, **`Routes`**, **`Route`**, **`Link`**, **`NavLink`**, **`useNavigate`**, **`useParams`**, **`useLocation`**, и **`Outlet`**.
+- **`Routes`** и **`Route`** позволяют нам определить маршруты и соответствующие компоненты.
+- **`Link`** и **`NavLink`** используются для создания навигационных ссылок.
+- Хуки **`useNavigate`**, **`useParams`** и **`useLocation`** предоставляют дополнительные возможности для работы с маршрутами и URL.
+- Компонент **`Outlet`** используется для рендеринга вложенных компонентов, связанных с маршрутами.
+- Компонент PrivateRoute позволяет ограничить доступ к определенным маршрутам только для авторизированных пользователей.
+</Box>
+
+<Box type="info" title="Официальная документация:">
+https://reactrouter.com/start/framework/installation
+</Box>
+
